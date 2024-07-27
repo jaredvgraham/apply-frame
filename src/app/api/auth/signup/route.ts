@@ -12,7 +12,7 @@ import { connect } from "@/utils/mongoose";
 
 export async function POST(req: NextRequest) {
   await connect();
-  const { email, password } = await req.json();
+  const { name, email, password } = await req.json();
 
   const existingUser = await findUserByEmail(email);
 
@@ -27,6 +27,7 @@ export async function POST(req: NextRequest) {
   const newUser = new User({
     id: Math.floor(Math.random() * 1000000),
     email,
+    name,
     password: hashedPassword,
     createdAt: new Date(),
   });

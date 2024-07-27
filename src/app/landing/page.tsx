@@ -22,21 +22,21 @@ const LandingPage = () => {
   };
 
   const text = {
-    appName: "MyApp",
-    header: "Welcome to MyApp",
-    description: "The ultimate solution for all your needs.",
+    appName: "AF",
+    header: "Welcome to, ApplyFrame",
+    description: "Where applying feels good.",
     features: [
       {
-        title: "Feature One",
-        description: "Description of feature one.",
+        title: "Job Organizer",
+        description: "Organize your job applications in one place.",
       },
       {
-        title: "Feature Two",
-        description: "Description of feature two.",
+        title: "Resume Builder",
+        description: "Build a professional resume in minutes.",
       },
       {
-        title: "Feature Three",
-        description: "Description of feature three.",
+        title: "Track Offers",
+        description: "Track your job offers and accept the best one.",
       },
     ],
     testimonials: [

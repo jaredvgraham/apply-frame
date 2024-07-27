@@ -14,11 +14,14 @@ const SignUp = () => {
 
   const formik = useFormik({
     initialValues: {
+      name: "",
       email: "",
       password: "",
     },
     validationSchema: Yup.object({
+      name: Yup.string().required("Required"),
       email: Yup.string().email("Invalid email address").required("Required"),
+
       password: Yup.string()
         .min(6, "Must be at least 6 characters")
         .required("Required"),
@@ -51,12 +54,37 @@ const SignUp = () => {
         <form onSubmit={formik.handleSubmit}>
           <div className="mb-4">
             <label
+              htmlFor="name"
+              className="block text-sm font-medium text-text"
+            >
+              Name
+            </label>
+
+            <div className="mt-1 relative rounded-md shadow-sm mb-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FiMail className="text-neutral" />
+              </div>
+              <input
+                id="name"
+                name="name"
+                type="name"
+                onChange={formik.handleChange}
+                value={formik.values.name}
+                className="block w-full pl-10 pr-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary sm:text-sm text-black"
+              />
+            </div>
+            {formik.touched.name && formik.errors.name ? (
+              <div className="mt-2 text-sm text-warning">
+                {formik.errors.name}
+              </div>
+            ) : null}
+            <label
               htmlFor="email"
               className="block text-sm font-medium text-text"
             >
               Email
             </label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <div className="mt-2 relative rounded-md shadow-sm">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <FiMail className="text-neutral" />
               </div>

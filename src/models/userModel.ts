@@ -4,16 +4,20 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 interface IUser extends Document {
   id: number;
   email: string;
+  name: string;
   password: string;
   createdAt: Date;
+  resume?: string;
 }
 
 // Create the user schema with Mongoose, ensuring it matches the IUser interface
 const userSchema: Schema<IUser> = new Schema({
   id: { type: Number, required: true, unique: true },
   email: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
   password: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
+  resume: { type: String, required: false },
 });
 
 // Define the User model using the schema and IUser interface
