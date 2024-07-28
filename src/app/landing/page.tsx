@@ -171,7 +171,7 @@ const LandingPage = () => {
             <h3 className="text-3xl font-bold text-primary mb-8">
               Testimonials
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {text.testimonials.map((testimonial, index) => (
                 <div
                   key={index}
@@ -186,7 +186,8 @@ const LandingPage = () => {
                   </h4>
                 </div>
               ))}
-            </div>
+            </div> */}
+            <p className="text-neutral italic">None yet.</p>
           </div>
         </section>
 
