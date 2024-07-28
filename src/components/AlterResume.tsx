@@ -49,7 +49,6 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
         const response = await axiosPrivate.get(`/user`);
       } catch (error: any) {
         if (error.response.status === 400) {
-          setError("Resume not found.");
           setNoResume(true);
         }
         console.error("Error fetching resume:", error);
