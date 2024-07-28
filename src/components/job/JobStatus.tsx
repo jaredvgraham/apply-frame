@@ -13,6 +13,7 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { useRouter } from "next/navigation";
 config.autoAddCss = false;
+import "../../styles/job.css";
 
 type JobStatusProps = {
   job: Job | null;

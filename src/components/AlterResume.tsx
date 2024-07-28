@@ -3,9 +3,8 @@
 import { useAuth } from "@/context/AuthContext";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useParams } from "next/navigation";
-import React, { ChangeEvent, use, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import UploadResume from "./UploadResume";
-import { set } from "mongoose";
 
 type AlterResumeProps = {
   jobId: string;
@@ -16,22 +15,17 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
   const [success, setSuccess] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [noResume, setNoResume] = useState<boolean>(false);
+  const [changeResume, setChangeResume] = useState<boolean>(false);
   const [uploading, setUploading] = useState<string>("");
   const { userId } = useAuth();
   const [pdfUrl, setPdfUrl] = useState<string>("");
   const axiosPrivate = useAxiosPrivate();
-
-  console.log("userId", userId);
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const response = await axiosPrivate.get(`/job/${jobId}`);
         setJobDescription(response.data.jobDescription);
-
-        console.log("Job:", response.data);
-
-        console.log("userId is", userId);
       } catch (error: any) {
         console.error("Error fetching job:", error);
         setError("Failed to load job details.");
@@ -82,7 +76,6 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
       );
       const url = window.URL.createObjectURL(new Blob([response.data]));
       setPdfUrl(url);
-      console.log("Response:", response);
       setSuccess("File uploaded successfully");
       setUploading("");
     } catch (error: any) {
@@ -93,11 +86,15 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
   };
 
   return (
-    <div className="w-full md:w-2/3 mx-auto  p-6 bg-background text-text shadow-md rounded-lg min-h-screen  ">
-      <div className="flex flex-col min-h-screen  justify-center items-center">
+    <div className="w-full md:w-2/3 mx-auto p-6 bg-background text-text shadow-md rounded-lg min-h-screen">
+      <div className="flex flex-col min-h-screen justify-center items-center">
         <h1 className="text-3xl font-semibold mb-6">Alter Resume</h1>
-        <div className="w-full lg:w-2/3  shadow-md bg-backgroundAlt mb-4 rounded-lg">
-          <form onSubmit={handleSubmit} className="space-y-6 p-4">
+        <p className="text-lg mb-6 text-center w-full md:w-2/3">
+          Use this form to tailor your resume based on the job description.
+          Upload your resume if you haven't done so already.
+        </p>
+        <div className="w-full lg:w-2/3 shadow-md bg-backgroundAlt mb-4 rounded-lg p-4">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-lg font-medium mb-2">
                 Job Description:
@@ -112,28 +109,35 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
             <button
               type="submit"
               className="w-full bg-primary text-white py-2 px-4 rounded-md shadow hover:bg-primary-dark transition duration-300"
+              disabled={uploading !== ""}
             >
-              Submit
+              {uploading ? "Uploading..." : "Submit"}
             </button>
             {pdfUrl && (
               <a
                 href={pdfUrl}
                 download="altered-resume.pdf"
-                className="block mt-4 text-center text-primary underline"
+                className="block mt-4 text-center text-neutral underline"
               >
                 Download altered resume
               </a>
             )}
-            {error && <p className="mt-4 text-center text-red-500">{error}</p>}
+            {error && <p className="mt-4 text-center text-warning">{error}</p>}
             {success && (
-              <p className="mt-4 text-center text-green-500">{success}</p>
-            )}
-            {uploading && (
-              <p className="mt-4 text-center text-primary">{uploading}</p>
+              <p className="mt-4 text-center text-success">{success}</p>
             )}
           </form>
         </div>
         {noResume && <UploadResume />}
+        {!noResume && (
+          <button
+            onClick={() => setChangeResume(!changeResume)}
+            className="text-neutral underline"
+          >
+            {changeResume ? "Cancel" : "Change Resume"}
+          </button>
+        )}
+        {changeResume && <UploadResume />}
       </div>
     </div>
   );
