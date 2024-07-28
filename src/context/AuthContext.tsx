@@ -10,10 +10,12 @@ import React, {
 import { axiosPublic } from "@/utils/axios";
 import { usePathname, useRouter } from "next/navigation";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { set } from "mongoose";
 
 interface AuthContextProps {
   isAuthenticated: boolean;
   accessToken: string | null;
+  userId: string | null;
   setAccessToken: (accessToken: string) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
@@ -29,6 +31,7 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -65,6 +68,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       const { accessToken } = response.data;
       setAccessToken(accessToken);
+      setUserId(response.data.userId);
       setIsAuthenticated(true);
       router.push("/protected");
     } catch (error) {
@@ -92,6 +96,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       const { accessToken } = response.data;
       if (accessToken) {
         setAccessToken(accessToken);
+        setUserId(response.data.userId);
         setIsAuthenticated(true);
       }
     } catch (error) {
@@ -104,6 +109,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       value={{
         isAuthenticated,
         accessToken,
+        userId,
         setAccessToken,
         setIsAuthenticated,
         login,

@@ -41,9 +41,10 @@ export async function POST(req: NextRequest) {
 
     const newRefreshToken = createRefreshToken(decoded);
     await addSession(decoded.id, newRefreshToken);
+    const userId = decoded.id;
 
     const accessToken = createAccessToken(decoded);
-    const response = NextResponse.json({ accessToken });
+    const response = NextResponse.json({ accessToken, userId });
 
     response.cookies.set("refreshToken", newRefreshToken, {
       httpOnly: true,

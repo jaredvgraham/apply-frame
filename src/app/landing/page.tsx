@@ -88,7 +88,7 @@ const LandingPage = () => {
       </Head>
       <div className="min-h-screen flex flex-col bg-background text-text">
         {/* Header */}
-        <header className="bg-background-alt shadow-custom">
+        <header className="bg-backgroundAlt shadow-custom">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-primary">{text.appName}</h1>
             <nav className="flex gap-4">
@@ -146,7 +146,7 @@ const LandingPage = () => {
         </main>
 
         {/* Features Section */}
-        <section id="features" className="bg-background-alt py-12">
+        <section id="features" className="bg-backgroundAlt py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h3 className="text-3xl font-bold text-primary mb-8">Features</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -175,7 +175,7 @@ const LandingPage = () => {
               {text.testimonials.map((testimonial, index) => (
                 <div
                   key={index}
-                  className="p-6 bg-background-alt rounded-lg shadow-custom border border-border"
+                  className="p-6 bg-backgroundAlt rounded-lg shadow-custom border border-border"
                 >
                   <p className="text-neutral italic mb-4">
                     "{testimonial.feedback}"
@@ -190,7 +190,7 @@ const LandingPage = () => {
         </section>
 
         {/* Call to Action Section */}
-        <section className="bg-background-alt py-12">
+        <section className="bg-backgroundAlt py-12">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h3 className="text-3xl font-bold text-primary mb-8">
               Ready to get started?

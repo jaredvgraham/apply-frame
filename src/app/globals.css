@@ -29,26 +29,28 @@
 }
 
 :root {
-  --dark-background-color: #1e1e1e;
-  --dark-background-alt-color: #2a2a2a; /* Slightly lighter for contrast */
-  --dark-text-color: #e0e0e0;
-  --dark-primary-color: #3b82f6;
-  --dark-secondary-color: #763b6c;
-  --dark-border-color: #3b3b3b;
-  --dark-neutral-color: #6b7280;
-  --dark-warning-color: #ef4444;
-  --dark-success-color: #10b981;
-  --dark-shadow: 0 4px 6px rgba(0, 0, 0, 0.6);
+  /* Dark theme colors */
+  --dark-background-color: rgba(18, 18, 18, 1); /* #121212 */
+  --dark-background-alt-color: rgba(29, 29, 29, 1); /* #1d1d1d */
+  --dark-text-color: rgba(224, 224, 224, 1); /* #e0e0e0 */
+  --dark-primary-color: rgb(110, 58, 173); /* #9165c7 */
+  --dark-secondary-color: rgb(32, 124, 115); /* #13b3a3 */
+  --dark-border-color: rgba(44, 44, 44, 1); /* #2c2c2c */
+  --dark-neutral-color: rgba(156, 163, 175, 1); /* #9ca3af */
+  --dark-warning-color: rgba(207, 102, 121, 1); /* #cf6679 */
+  --dark-success-color: rgba(3, 218, 198, 1); /* #03dac6 */
+  --dark-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
 
-  --light-background-color: #ffffff;
-  --light-background-alt-color: #f0f0f0; /* Slightly darker for contrast */
-  --light-text-color: #1e1e1e;
-  --light-primary-color: #3b82f6;
-  --light-secondary-color: #e88a1d;
-  --light-border-color: #d1d5db;
-  --light-neutral-color: #9ca3af;
-  --light-warning-color: #ef4444;
-  --light-success-color: #10b981;
+  /* Light theme colors */
+  --light-background-color: rgba(245, 245, 245, 1); /* #f5f5f5 */
+  --light-background-alt-color: rgba(224, 224, 224, 1); /* #e0e0e0 */
+  --light-text-color: rgba(33, 33, 33, 1); /* #212121 */
+  --light-primary-color: rgba(98, 0, 238, 1); /* #6200ee */
+  --light-secondary-color: rgb(34, 153, 141); /* #03dac5 */
+  --light-border-color: rgba(204, 204, 204, 1); /* #cccccc */
+  --light-neutral-color: rgba(117, 117, 117, 1); /* #757575 */
+  --light-warning-color: rgba(176, 0, 32, 1); /* #b00020 */
+  --light-success-color: rgba(1, 135, 134, 1); /* #018786 */
   --light-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 

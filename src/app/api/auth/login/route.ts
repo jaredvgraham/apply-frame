@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
     // Store the session in the database
     await addSession(user.id, refreshToken);
 
-    const response = NextResponse.json({ accessToken });
+    const userId = user.id;
+
+    const response = NextResponse.json({ accessToken, userId });
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",

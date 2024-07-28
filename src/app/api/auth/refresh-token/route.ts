@@ -38,7 +38,8 @@ export async function POST(req: NextRequest) {
       id: decoded.id,
       email: decoded.email,
     });
-    return NextResponse.json({ accessToken });
+    const userId = decoded.id;
+    return NextResponse.json({ accessToken, userId });
   } catch (error) {
     console.log("Invalid refresh token:", error);
     return NextResponse.json(

@@ -47,7 +47,7 @@ const DashboardOverview = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-background-alt shadow-xl text-center"
+            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
           >
             <h3 className="text-xl font-semibold mb-4">Total Applications</h3>
             <p className="text-6xl font-bold text-primary">
@@ -56,7 +56,7 @@ const DashboardOverview = () => {
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-background-alt shadow-xl text-center"
+            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
           >
             <h3 className="text-xl font-semibold mb-4">Interviews Scheduled</h3>
             <p className="text-6xl font-bold text-success">
@@ -65,7 +65,7 @@ const DashboardOverview = () => {
           </motion.div>
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-background-alt shadow-xl text-center"
+            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
           >
             <h3 className="text-xl font-semibold mb-4">Offers Received</h3>
             <p className="text-6xl font-bold text-secondary">
@@ -86,7 +86,7 @@ const DashboardOverview = () => {
               <motion.div
                 key={application._id}
                 whileHover={{ scale: 1.03 }}
-                className="border-2 border-border p-6 rounded-xl bg-background-alt shadow-lg cursor-pointer hover:shadow-2xl transition"
+                className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-lg cursor-pointer hover:shadow-2xl transition"
                 onClick={() => router.push(`/jobs/${application._id}`)}
               >
                 <div className="flex flex-col h-full">

@@ -54,7 +54,8 @@ const handlerPut = async (req: NextRequest) => {
       );
     }
 
-    const id = req.url.split("/api/job/")[1];
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("jobId");
     const data = await req.json();
 
     const job = await JobModel.findByIdAndUpdate(id, data, { new: true });
