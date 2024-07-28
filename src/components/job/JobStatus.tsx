@@ -1,12 +1,6 @@
-// i know this is a terrible way to handle this data i am currently fixing it
-// i know this is a terrible way to handle this data i am currently fixing it
-// i know this is a terrible way to handle this data i am currently fixing it
-//i just needed a quick fix before i handle the state management properly
 "use client";
-import useAxiosPrivate from "@/hooks/useAxiosPrivate";
-import "../../styles/job.css";
+import React from "react";
 import { Job } from "@/types";
-import React, { useState, useEffect, use } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -24,75 +18,28 @@ type JobStatusProps = {
   job: Job | null;
   isEditing: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSave: () => void;
+
+  dateApplied: string;
+  setDateApplied: React.Dispatch<React.SetStateAction<string>>;
+  interviewDate: string;
+  setInterviewDate: React.Dispatch<React.SetStateAction<string>>;
+  offerAmount: number | null;
+  setOfferAmount: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 const JobStatus = ({
   job,
   isEditing,
   handleChange,
-  handleSave,
+
+  dateApplied,
+  setDateApplied,
+  interviewDate,
+  setInterviewDate,
+  offerAmount,
+  setOfferAmount,
 }: JobStatusProps) => {
-  const [dateApplied, setDateApplied] = useState<string>("");
-  const [interviewDate, setInterviewDate] = useState<string>("");
-  const [offerAmount, setOfferAmount] = useState<number | null>(null);
-  const axiosPrivate = useAxiosPrivate();
   const router = useRouter();
-
-  useEffect(() => {
-    if (job?.dateApplied) {
-      try {
-        const parsedDate = new Date(job.dateApplied);
-        setDateApplied(parsedDate.toISOString().substring(0, 10));
-      } catch (error) {
-        console.error("Error parsing date:", error);
-      }
-    }
-    if (job?.interviewDate) {
-      try {
-        const parsedDate = new Date(job.interviewDate);
-        setInterviewDate(parsedDate.toISOString().substring(0, 10));
-      } catch (error) {
-        console.error("Error parsing date:", error);
-      }
-    }
-    if (job?.offerAmount !== undefined) {
-      setOfferAmount(job.offerAmount);
-    }
-  }, [job]);
-
-  const sendDateToBack = async () => {
-    console.log("sendDateToBack");
-
-    try {
-      console.log(dateApplied, interviewDate, offerAmount);
-
-      if (job?._id) {
-        await axiosPrivate.put(`/job/${job._id}`, {
-          dateApplied,
-          interviewDate,
-          offerAmount,
-        });
-        console.log("Date updated successfully");
-      }
-    } catch (error: any) {
-      console.error("Error updating job:", error);
-    }
-  };
-
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDateApplied(e.target.value);
-  };
-
-  const handleInterviewDateChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setInterviewDate(e.target.value);
-  };
-
-  useEffect(() => {
-    sendDateToBack();
-  }, [handleSave]);
 
   const handleAlterResume = () => {
     router.push(`/jobs/${job?._id}/alterResume`);
@@ -116,15 +63,12 @@ const JobStatus = ({
               {job?.applied && (
                 <input
                   type="date"
+                  name="dateApplied"
                   value={dateApplied}
-                  onChange={handleDateChange}
+                  onChange={(e) => setDateApplied(e.target.value)}
                   className="ml-2 bg-transparent border-2 border-border p-2 rounded"
                 />
               )}
-              <button className="ml-2 bg-primary text-white py-1 px-3 rounded flex items-center">
-                <FontAwesomeIcon icon={faSave} className="mr-2" />
-                Save
-              </button>
             </>
           ) : (
             <>
@@ -173,8 +117,9 @@ const JobStatus = ({
               {job?.interview && (
                 <input
                   type="date"
+                  name="interviewDate"
                   value={interviewDate}
-                  onChange={handleInterviewDateChange}
+                  onChange={(e) => setInterviewDate(e.target.value)}
                   className="ml-2 bg-transparent border-2 border-border p-2 rounded"
                 />
               )}
@@ -222,7 +167,6 @@ const JobStatus = ({
                 onChange={handleChange}
                 className="ml-2 bg-transparent"
               />
-
               {job?.offer && (
                 <input
                   type="number"

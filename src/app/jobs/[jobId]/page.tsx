@@ -7,27 +7,37 @@ import JobHeader from "@/components/job/JobHeader";
 import JobDescription from "@/components/job/JobDescription";
 import JobNotes from "@/components/job/JobNotes";
 import JobStatus from "@/components/job/JobStatus";
-import { set } from "mongoose";
 
 const JobDetailPage = () => {
   const [job, setJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedJob, setEditedJob] = useState<Job | null>(null);
+  const [dateApplied, setDateApplied] = useState<string>("");
+  const [interviewDate, setInterviewDate] = useState<string>("");
+  const [offerAmount, setOfferAmount] = useState<number | null>(null);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const axiosPrivate = useAxiosPrivate();
-  const { jobId } = useParams();
+  const { jobId } = useParams<{ jobId: string }>();
   const router = useRouter();
 
   useEffect(() => {
     const fetchJob = async () => {
-      console.log("jobId", jobId);
-
       try {
         const response = await axiosPrivate.get(`/job/${jobId}`);
         setJob(response.data);
         setEditedJob(response.data);
-        console.log("Job:", response.data);
+        if (response.data.dateApplied) {
+          setDateApplied(
+            new Date(response.data.dateApplied).toISOString().substring(0, 10)
+          );
+        }
+        if (response.data.interviewDate) {
+          setInterviewDate(
+            new Date(response.data.interviewDate).toISOString().substring(0, 10)
+          );
+        }
+        setOfferAmount(response.data.offerAmount || null);
       } catch (error: any) {
         console.error("Error fetching job:", error);
         setError("Failed to load job details.");
@@ -49,23 +59,22 @@ const JobDetailPage = () => {
   };
 
   const handleSave = async () => {
-    if (!editedJob) {
-      return;
-    }
-    console.log("editedJob", editedJob);
-    if (editedJob?.interest > 10) {
+    if (!editedJob) return;
+    if (editedJob.interest > 10) {
       setError("Interest must be between 0 and 10");
       return;
     }
 
     try {
-      if (editedJob) {
-        await axiosPrivate.put(`/job/${jobId}`, editedJob);
-        setJob(editedJob);
-        setIsEditing(false);
-        setError(null);
-        return true;
-      }
+      await axiosPrivate.put(`/job/${jobId}`, {
+        ...editedJob,
+        dateApplied: dateApplied ? new Date(dateApplied) : null,
+        interviewDate: interviewDate ? new Date(interviewDate) : null,
+        offerAmount,
+      });
+      setJob(editedJob);
+      setIsEditing(false);
+      setError(null);
     } catch (error: any) {
       console.error("Error updating job:", error);
     }
@@ -81,6 +90,14 @@ const JobDetailPage = () => {
           ...editedJob,
           [name]: (e.target as HTMLInputElement).checked,
         });
+      } else if (type === "date") {
+        if (name === "dateApplied") {
+          setDateApplied(value);
+        } else if (name === "interviewDate") {
+          setInterviewDate(value);
+        }
+      } else if (type === "number" && name === "offerAmount") {
+        setOfferAmount(Number(value));
       } else {
         setEditedJob({
           ...editedJob,
@@ -102,7 +119,7 @@ const JobDetailPage = () => {
   return (
     <div className="p-6 bg-background text-text min-h-screen">
       {job ? (
-        <div className="w-full  mx-auto space-y-8">
+        <div className="w-full mx-auto space-y-8">
           <JobHeader
             companyName={job.companyName}
             isEditing={isEditing}
@@ -148,7 +165,7 @@ const JobDetailPage = () => {
             />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <JobNotes
-                notes={editedJob?.notes}
+                notes={editedJob?.notes || []}
                 isEditing={isEditing}
                 handleNotesChange={handleNotesChange}
               />
@@ -156,7 +173,12 @@ const JobDetailPage = () => {
                 job={editedJob}
                 isEditing={isEditing}
                 handleChange={handleChange}
-                handleSave={handleSave}
+                dateApplied={dateApplied}
+                setDateApplied={setDateApplied}
+                interviewDate={interviewDate}
+                setInterviewDate={setInterviewDate}
+                offerAmount={offerAmount}
+                setOfferAmount={setOfferAmount}
               />
             </div>
           </div>

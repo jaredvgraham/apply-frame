@@ -4,6 +4,7 @@ import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import Navbar from "@/components/Navbar";
+import { JobProvider } from "@/context/JobContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +23,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <AuthProvider>
-            <Navbar />
-            {children}
+            <JobProvider>
+              <Navbar />
+              {children}
+            </JobProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
