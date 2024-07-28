@@ -64,6 +64,7 @@ const JobDetailPage = () => {
         setJob(editedJob);
         setIsEditing(false);
         setError(null);
+        return true;
       }
     } catch (error: any) {
       console.error("Error updating job:", error);
@@ -155,6 +156,7 @@ const JobDetailPage = () => {
                 job={editedJob}
                 isEditing={isEditing}
                 handleChange={handleChange}
+                handleSave={handleSave}
               />
             </div>
           </div>

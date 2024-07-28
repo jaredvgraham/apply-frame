@@ -42,28 +42,35 @@ const handlerGet = async (req: NextRequest, res: NextResponse) => {
 };
 
 const handlerPut = async (req: NextRequest) => {
+  console.log("handlerPut hit");
+
   await connect();
   try {
     const user = (req as any).user;
     const userRecord = await User.findOne({ email: user.email });
 
     if (!userRecord) {
+      console.log("User not found");
+
       return NextResponse.json(
         { success: false, message: "User not found" },
         { status: 404 }
       );
     }
 
-    const { searchParams } = new URL(req.url);
-    const id = searchParams.get("jobId");
+    const id = req.url.split("http://localhost:3000/api/job/")[1];
+    console.log("id", id);
+
     const data = await req.json();
+
+    console.log("data", data);
 
     const job = await JobModel.findByIdAndUpdate(id, data, { new: true });
 
     if (!job) {
       return NextResponse.json(
         { success: false, message: "Job not found" },
-        { status: 404 }
+        { status: 400 }
       );
     }
 

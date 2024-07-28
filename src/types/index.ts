@@ -18,6 +18,8 @@ export interface Job {
   dateApplied?: Date;
   interest: number;
   offer: boolean;
+  offerAmount?: number;
+
   jobLocation?: string;
   notes?: string[];
 }

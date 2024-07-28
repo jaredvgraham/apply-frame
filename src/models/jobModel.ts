@@ -19,6 +19,7 @@ interface IJob extends Document {
   dateApplied?: Date;
   interest: number;
   offer: boolean;
+  offerAmount?: number;
   jobLocation?: string;
   createdAt: Date;
   notes?: string[];
@@ -41,6 +42,8 @@ const jobSchema: Schema<IJob> = new Schema({
   dateApplied: { type: Date, required: false },
   interest: { type: Number, required: true },
   offer: { type: Boolean, default: false },
+  offerAmount: { type: Number, required: false },
+
   jobLocation: { type: String, required: false },
   createdAt: { type: Date, default: Date.now },
   notes: { type: [String], required: false },

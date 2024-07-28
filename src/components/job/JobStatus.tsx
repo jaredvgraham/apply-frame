@@ -1,8 +1,12 @@
+// i know this is a terrible way to handle this data i am currently fixing it
+// i know this is a terrible way to handle this data i am currently fixing it
+// i know this is a terrible way to handle this data i am currently fixing it
+//i just needed a quick fix before i handle the state management properly
 "use client";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import "../../styles/job.css";
 import { Job } from "@/types";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheckCircle,
@@ -20,11 +24,18 @@ type JobStatusProps = {
   job: Job | null;
   isEditing: boolean;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleSave: () => void;
 };
 
-const JobStatus = ({ job, isEditing, handleChange }: JobStatusProps) => {
+const JobStatus = ({
+  job,
+  isEditing,
+  handleChange,
+  handleSave,
+}: JobStatusProps) => {
   const [dateApplied, setDateApplied] = useState<string>("");
   const [interviewDate, setInterviewDate] = useState<string>("");
+  const [offerAmount, setOfferAmount] = useState<number | null>(null);
   const axiosPrivate = useAxiosPrivate();
   const router = useRouter();
 
@@ -45,14 +56,22 @@ const JobStatus = ({ job, isEditing, handleChange }: JobStatusProps) => {
         console.error("Error parsing date:", error);
       }
     }
+    if (job?.offerAmount !== undefined) {
+      setOfferAmount(job.offerAmount);
+    }
   }, [job]);
 
   const sendDateToBack = async () => {
+    console.log("sendDateToBack");
+
     try {
+      console.log(dateApplied, interviewDate, offerAmount);
+
       if (job?._id) {
         await axiosPrivate.put(`/job/${job._id}`, {
           dateApplied,
           interviewDate,
+          offerAmount,
         });
         console.log("Date updated successfully");
       }
@@ -71,9 +90,9 @@ const JobStatus = ({ job, isEditing, handleChange }: JobStatusProps) => {
     setInterviewDate(e.target.value);
   };
 
-  const handleSave = () => {
+  useEffect(() => {
     sendDateToBack();
-  };
+  }, [handleSave]);
 
   const handleAlterResume = () => {
     router.push(`/jobs/${job?._id}/alterResume`);
@@ -102,10 +121,7 @@ const JobStatus = ({ job, isEditing, handleChange }: JobStatusProps) => {
                   className="ml-2 bg-transparent border-2 border-border p-2 rounded"
                 />
               )}
-              <button
-                onClick={handleSave}
-                className="ml-2 bg-primary text-white py-1 px-3 rounded flex items-center"
-              >
+              <button className="ml-2 bg-primary text-white py-1 px-3 rounded flex items-center">
                 <FontAwesomeIcon icon={faSave} className="mr-2" />
                 Save
               </button>
@@ -198,27 +214,45 @@ const JobStatus = ({ job, isEditing, handleChange }: JobStatusProps) => {
         <li className="flex items-center">
           <strong className="mr-2">Offer:</strong>
           {isEditing ? (
-            <input
-              type="checkbox"
-              name="offer"
-              checked={job?.offer || false}
-              onChange={handleChange}
-              className="ml-2 bg-transparent"
-            />
+            <>
+              <input
+                type="checkbox"
+                name="offer"
+                checked={job?.offer || false}
+                onChange={handleChange}
+                className="ml-2 bg-transparent"
+              />
+
+              {job?.offer && (
+                <input
+                  type="number"
+                  name="offerAmount"
+                  value={offerAmount || ""}
+                  onChange={(e) => setOfferAmount(Number(e.target.value))}
+                  className="ml-2 bg-transparent border-2 border-border p-2 rounded"
+                />
+              )}
+            </>
           ) : (
             <span className="ml-2 flex items-center">
               {job?.offer ? (
-                <FontAwesomeIcon
-                  icon={faCheckCircle}
-                  className="text-success mr-1"
-                />
+                <>
+                  <FontAwesomeIcon
+                    icon={faCheckCircle}
+                    className="text-success mr-1"
+                  />
+                  {job?.offer && offerAmount && (
+                    <span className="ml-2 flex items-center">
+                      Offer Amount: ${offerAmount}
+                    </span>
+                  )}
+                </>
               ) : (
                 <FontAwesomeIcon
                   icon={faTimesCircle}
                   className="text-warning mr-1"
                 />
               )}
-              {job?.offer ? "Received" : "Not Received"}
             </span>
           )}
         </li>
