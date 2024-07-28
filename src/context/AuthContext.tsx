@@ -59,7 +59,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     ) {
       router.push("/landing");
     }
-  }, [loading, isAuthenticated, pathname]);
+  }, [loading, isAuthenticated, pathname, router]);
   const login = async (email: string, password: string) => {
     try {
       const response = await axiosPublic.post("/auth/login", {

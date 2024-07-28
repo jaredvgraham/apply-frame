@@ -52,7 +52,7 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
     if (userId) {
       fetchResume();
     }
-  }, [userId]);
+  }, [userId, axiosPrivate]);
 
   const handleJobDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setJobDescription(e.target.value);
@@ -91,7 +91,7 @@ const AlterResume = ({ jobId }: AlterResumeProps) => {
         <h1 className="text-3xl font-semibold mb-6">Alter Resume</h1>
         <p className="text-lg mb-6 text-center w-full md:w-2/3">
           Use this form to tailor your resume based on the job description.
-          Upload your resume if you haven't done so already.
+          Upload your resume if you haven&apos;t done so already.
         </p>
         <div className="w-full lg:w-2/3 shadow-md bg-backgroundAlt mb-4 rounded-lg p-4">
           <form onSubmit={handleSubmit} className="space-y-6">

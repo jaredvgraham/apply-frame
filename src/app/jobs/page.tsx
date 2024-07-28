@@ -4,7 +4,7 @@ import { Job } from "@/types";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Page = () => {
   const [jobs, setJobs] = useState([]);
   const [error, setError] = useState(null);
   const axiosPrivate = useAxiosPrivate();
@@ -33,7 +33,7 @@ const page = () => {
       <h1>Jobs</h1>
       <ul>
         {jobs.map((job: any) => (
-          <div>
+          <div key={job._id}>
             <li key={job._id} onClick={() => navToJob(job._id)}>
               <h2>{job.companyName}</h2>
               <p>{job.jobTitle}</p>
@@ -47,4 +47,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

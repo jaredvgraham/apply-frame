@@ -29,9 +29,18 @@ const DashboardOverview = () => {
 
   if (error) {
     return (
-      <div className="p-6 bg-background text-text min-h-screen">{error}</div>
+      <div className="p-6 bg-background text-text min-h-screen flex items-center justify-center">
+        {error}
+      </div>
     );
   }
+
+  const formatDate = (dateString: string) => {
+    return `${dateString.substring(5, 7)}/${dateString.substring(
+      8,
+      10
+    )}/${dateString.substring(0, 4)}`;
+  };
 
   return (
     <div className="p-6 bg-background text-text min-h-screen">
@@ -46,8 +55,8 @@ const DashboardOverview = () => {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
+            whileHover={{ scale: 1.1 }}
+            className="border border-border p-6 rounded-xl bg-backgroundAlt shadow-custom text-center transform transition duration-500 ease-in-out hover:scale-105"
           >
             <h3 className="text-xl font-semibold mb-4">Total Applications</h3>
             <p className="text-6xl font-bold text-primary">
@@ -55,8 +64,8 @@ const DashboardOverview = () => {
             </p>
           </motion.div>
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
+            whileHover={{ scale: 1.1 }}
+            className="border border-border p-6 rounded-xl bg-backgroundAlt shadow-custom text-center transform transition duration-500 ease-in-out hover:scale-105"
           >
             <h3 className="text-xl font-semibold mb-4">Interviews Scheduled</h3>
             <p className="text-6xl font-bold text-success">
@@ -64,8 +73,8 @@ const DashboardOverview = () => {
             </p>
           </motion.div>
           <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-xl text-center"
+            whileHover={{ scale: 1.1 }}
+            className="border border-border p-6 rounded-xl bg-backgroundAlt shadow-custom text-center transform transition duration-500 ease-in-out hover:scale-105"
           >
             <h3 className="text-xl font-semibold mb-4">Offers Received</h3>
             <p className="text-6xl font-bold text-secondary">
@@ -80,14 +89,14 @@ const DashboardOverview = () => {
         <h2 className="text-3xl font-semibold mb-6 text-center">
           Recent Activity
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
           {pastApplications.length > 0 ? (
             pastApplications.slice(-5).map((application: Job) => (
               <motion.div
                 key={application._id}
-                whileHover={{ scale: 1.03 }}
-                className="border-2 border-border p-6 rounded-xl bg-backgroundAlt shadow-lg cursor-pointer hover:shadow-2xl transition"
+                whileHover={{ scale: 1.05 }}
                 onClick={() => router.push(`/jobs/${application._id}`)}
+                className="relative border border-border p-6 rounded-xl bg-backgroundAlt shadow-custom cursor-pointer transform transition duration-500 ease-in-out hover:scale-105"
               >
                 <div className="flex flex-col h-full">
                   <p className="font-medium text-lg mb-2">
@@ -99,12 +108,19 @@ const DashboardOverview = () => {
                   <p className="font-medium text-lg mb-2">
                     <strong>Date Applied:</strong>{" "}
                     {application.dateApplied
-                      ? new Date(application.dateApplied).toLocaleDateString()
+                      ? formatDate(application.dateApplied.toLocaleString())
                       : "N/A"}
                   </p>
                   <p className="font-medium text-lg">
                     <strong>Interest Level:</strong> {application.interest}
                   </p>
+                  <motion.button
+                    whileHover={{ scale: 1.1 }}
+                    className="absolute bottom-4 right-4 border border-border text-secondary py-2 px-4 rounded-lg shadow-md hover:bg-primary-dark transition cursor-pointer"
+                    onClick={() => router.push(`/jobs/${application._id}`)}
+                  >
+                    View Details
+                  </motion.button>
                 </div>
               </motion.div>
             ))
@@ -118,7 +134,7 @@ const DashboardOverview = () => {
       <section className="flex justify-center mt-12">
         <Link href="/dashboard/new-application">
           <motion.div
-            whileHover={{ scale: 1.05 }}
+            whileHover={{ scale: 1.1 }}
             className="bg-primary text-white py-4 px-8 rounded-xl shadow-md hover:bg-primary-dark transition cursor-pointer text-center"
           >
             Add New Application

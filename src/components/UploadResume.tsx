@@ -48,7 +48,7 @@ const UploadResume = () => {
   };
 
   return (
-    <div className="w-full lg:w-2/3 mx-auto p-6 bg-backgroundAlt text-text shadow-md rounded-lg">
+    <div className="w-full lg:w-2/3 mx-auto p-6 bg-backgroundAlt text-text shadow-md mt-32 rounded-lg">
       <h1 className="text-3xl font-semibold mb-6">Upload Resume</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>

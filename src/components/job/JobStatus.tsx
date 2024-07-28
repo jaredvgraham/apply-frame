@@ -50,7 +50,7 @@ const JobStatus = ({
     <div className="border-2 border-border p-4 rounded-lg bg-backgroundAlt shadow-lg">
       <h3 className="text-lg font-semibold mb-4">Application Status</h3>
       <ul className="list-none space-y-4">
-        <li className="flex items-center">
+        <li className="flex-col md:flex-row items-center">
           <strong className="mr-2">Applied:</strong>
           {isEditing ? (
             <>
@@ -104,7 +104,7 @@ const JobStatus = ({
             </>
           )}
         </li>
-        <li className="flex items-center">
+        <li className="flex-col md:flex-row items-center">
           <strong className="mr-2">Interview:</strong>
           {isEditing ? (
             <>
@@ -157,7 +157,7 @@ const JobStatus = ({
             </>
           )}
         </li>
-        <li className="flex items-center">
+        <li className="sm:flex-col md:flex-row  items-center">
           <strong className="mr-2">Offer:</strong>
           {isEditing ? (
             <>

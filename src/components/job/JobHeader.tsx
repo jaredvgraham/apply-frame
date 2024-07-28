@@ -28,15 +28,9 @@ const JobHeader = ({
   router,
 }: JobHeaderProps) => {
   return (
-    <div className="flex justify-between items-center">
-      <h2 className="text-4xl font-bold">{companyName}</h2>
+    <div className="flex-col  md:flex-row flex justify-between items-center">
+      <h2 className="p-1 md:p-0 text-4xl font-bold">{companyName}</h2>
       <div className="flex space-x-4">
-        <button
-          onClick={() => router.push("/jobs")}
-          className="bg-primary text-white py-2 px-4 rounded-md shadow hover:bg-primary-dark transition"
-        >
-          <FontAwesomeIcon icon={faArrowLeft} /> Back to Jobs
-        </button>
         {isEditing ? (
           <>
             <button

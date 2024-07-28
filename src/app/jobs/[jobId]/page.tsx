@@ -11,6 +11,11 @@ import JobStatus from "@/components/job/JobStatus";
 const JobDetailPage = () => {
   const [job, setJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [contactPerson, setContactPerson] = useState({
+    name: "",
+    email: "",
+    phone: "",
+  });
   const [isEditing, setIsEditing] = useState(false);
   const [editedJob, setEditedJob] = useState<Job | null>(null);
   const [dateApplied, setDateApplied] = useState<string>("");
@@ -38,6 +43,13 @@ const JobDetailPage = () => {
           );
         }
         setOfferAmount(response.data.offerAmount || null);
+        setContactPerson(
+          response.data.contactPerson || {
+            name: "",
+            email: "",
+            phone: "",
+          }
+        );
       } catch (error: any) {
         console.error("Error fetching job:", error);
         setError("Failed to load job details.");
@@ -71,8 +83,10 @@ const JobDetailPage = () => {
         dateApplied: dateApplied ? new Date(dateApplied) : null,
         interviewDate: interviewDate ? new Date(interviewDate) : null,
         offerAmount,
+        contactPerson,
       });
-      setJob(editedJob);
+
+      setJob({ ...editedJob, contactPerson });
       setIsEditing(false);
       setError(null);
     } catch (error: any) {
@@ -98,6 +112,9 @@ const JobDetailPage = () => {
         }
       } else if (type === "number" && name === "offerAmount") {
         setOfferAmount(Number(value));
+      } else if (name.startsWith("contactPerson")) {
+        const key = name.split(".")[1];
+        setContactPerson({ ...contactPerson, [key]: value });
       } else {
         setEditedJob({
           ...editedJob,
@@ -117,7 +134,7 @@ const JobDetailPage = () => {
   };
 
   return (
-    <div className="p-6 bg-background text-text min-h-screen">
+    <div className="p-0 md:p-6 bg-background text-text min-h-screen">
       {job ? (
         <div className="w-full mx-auto space-y-8">
           <JobHeader
@@ -181,6 +198,51 @@ const JobDetailPage = () => {
                 setOfferAmount={setOfferAmount}
               />
             </div>
+            <h2 className="text-xl font-semibold">Contact Person:</h2>
+            <ul className="list-none space-y-4">
+              <li>
+                <strong>Name:</strong>{" "}
+                {isEditing ? (
+                  <input
+                    type="text"
+                    name="contactPerson.name"
+                    value={contactPerson.name}
+                    onChange={handleChange}
+                    className="p-2 border-2 border-border rounded-md bg-transparent text-text"
+                  />
+                ) : (
+                  job.contactPerson?.name
+                )}
+              </li>
+              <li>
+                <strong>Email:</strong>{" "}
+                {isEditing ? (
+                  <input
+                    type="email"
+                    name="contactPerson.email"
+                    value={contactPerson.email}
+                    onChange={handleChange}
+                    className="p-2 border-2 border-border rounded-md bg-transparent text-text"
+                  />
+                ) : (
+                  job.contactPerson?.email
+                )}
+              </li>
+              <li>
+                <strong>Phone:</strong>{" "}
+                {isEditing ? (
+                  <input
+                    type="tel"
+                    name="contactPerson.phone"
+                    value={contactPerson.phone}
+                    onChange={handleChange}
+                    className="p-2 border-2 border-border rounded-md bg-transparent text-text"
+                  />
+                ) : (
+                  job.contactPerson?.phone
+                )}
+              </li>
+            </ul>
           </div>
         </div>
       ) : (

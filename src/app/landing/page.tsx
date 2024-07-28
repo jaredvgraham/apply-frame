@@ -178,8 +178,9 @@ const LandingPage = () => {
                   className="p-6 bg-backgroundAlt rounded-lg shadow-custom border border-border"
                 >
                   <p className="text-neutral italic mb-4">
-                    "{testimonial.feedback}"
+                    &quot;{testimonial.feedback}&quot;
                   </p>
+
                   <h4 className="text-xl font-semibold text-secondary">
                     - {testimonial.name}
                   </h4>

@@ -3,11 +3,7 @@ import React, { useState, ChangeEvent, FormEvent } from "react";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 import { useRouter } from "next/navigation";
 
-interface JobFormProps {
-  applyWithUs?: boolean;
-}
-
-const JobForm: React.FC<JobFormProps> = () => {
+const JobForm = () => {
   const axiosPrivate = useAxiosPrivate();
   const router = useRouter();
   const [formData, setFormData] = useState({
