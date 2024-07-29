@@ -9,6 +9,9 @@ import axios from "axios";
 
 //sheesh
 
+export const maxDuration = 300; // 300 seconds or 5 minutes
+export const dynamic = "force-dynamic";
+
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("upload resume handler hit");
   await connect();
