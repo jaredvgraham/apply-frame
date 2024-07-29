@@ -6,6 +6,8 @@ import JobModel from "@/models/jobModel";
 import authMiddleware from "@/middleware/auth";
 import User from "@/models/userModel";
 
+const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 const handlerGet = async (req: NextRequest, res: NextResponse) => {
   await connect();
   try {
@@ -19,7 +21,7 @@ const handlerGet = async (req: NextRequest, res: NextResponse) => {
         { status: 404 }
       );
     }
-    const id = req.url.split("http://localhost:3000/api/job/")[1];
+    const id = req.url.split(`${baseUrl}/job/`)[1];
     console.log("id", id);
 
     const job = await JobModel.findById(id);
@@ -58,7 +60,7 @@ const handlerPut = async (req: NextRequest) => {
       );
     }
 
-    const id = req.url.split("http://localhost:3000/api/job/")[1];
+    const id = req.url.split(`${baseUrl}/job/`)[1];
     console.log("id", id);
 
     const data = await req.json();
@@ -97,7 +99,7 @@ const handlerDelete = async (req: NextRequest) => {
       );
     }
 
-    const id = req.url.split("/api/job/")[1];
+    const id = req.url.split(`${baseUrl}/job/`)[1];
 
     const job = await JobModel.findByIdAndDelete(id);
 
