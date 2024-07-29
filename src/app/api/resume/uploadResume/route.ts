@@ -1,15 +1,13 @@
-import { writeFile, unlink } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-import { join } from "path";
 import puppeteer from "puppeteer";
-import fs from "fs";
+import { uploadFileToFirebase } from "@/lib/uploadFileFirebase";
 import { uploadImageToFirebase } from "@/lib/uploadImageFirebase";
 import User from "@/models/userModel";
 import authMiddleware from "@/middleware/auth";
 import { connect } from "@/utils/mongoose";
-import { use } from "react";
+import { Buffer } from "buffer";
 
-const config = {
+export const config = {
   api: {
     bodyParser: false,
   },
@@ -48,14 +46,10 @@ const handler = async (req: NextRequest, res: NextResponse) => {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const uploadDir = join(process.cwd(), "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    const filePath = join(uploadDir, file.name);
-
-    await writeFile(filePath, buffer);
-    console.log("File written to:", filePath);
+    // Upload the PDF file to Firebase Storage
+    const pdfFileName = `resumes/${Date.now()}_${file.name}`;
+    const pdfUrl = await uploadFileToFirebase(buffer, pdfFileName);
+    console.log("PDF URL:", pdfUrl);
 
     // Take a screenshot of the PDF using Puppeteer
     const browser = await puppeteer.launch({ headless: true });
@@ -63,7 +57,7 @@ const handler = async (req: NextRequest, res: NextResponse) => {
 
     page.on("console", (consoleObj) => console.log(consoleObj.text()));
 
-    await page.goto(`file://${filePath}`, { waitUntil: "networkidle0" });
+    await page.goto(pdfUrl, { waitUntil: "networkidle0" });
     const screenshotBuffer = await page.screenshot({ fullPage: true });
     await browser.close();
     console.log("Screenshot taken");
@@ -72,8 +66,6 @@ const handler = async (req: NextRequest, res: NextResponse) => {
     const imageName = `${file.name.split(".")[0]}.png`;
     const imageUrl = await uploadImageToFirebase(screenshotBuffer, imageName);
     console.log("Image URL:", imageUrl);
-
-    await unlink(filePath);
 
     console.log("User record before update:", userRecord);
 
