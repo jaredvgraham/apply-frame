@@ -9,12 +9,6 @@ import fs from "fs";
 
 import authMiddleware from "@/middleware/auth";
 
-const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("alter resume handler hit");
 
