@@ -8,12 +8,15 @@ import User from "@/models/userModel";
 import fs from "fs";
 
 import authMiddleware from "@/middleware/auth";
+import { connect } from "@/utils/mongoose";
+import axios from "axios";
 
 export const maxDuration = 300; // 300 seconds or 5 minutes
 export const dynamic = "force-dynamic";
 //
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("alter resume handler hit");
+  await connect();
 
   try {
     const jobDescription = await req.json();
@@ -56,27 +59,18 @@ const handler = async (req: NextRequest, res: NextResponse) => {
       );
     }
 
-    const uploadDir = join(process.cwd(), "uploads");
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
-    }
-    const htmlPath = join(uploadDir, "resume.html");
+    const response = await axios.post(
+      `${process.env.PUP_URL}/alter-resume`,
+      { htmlContent: alteredResumeHtml },
+      {
+        headers: {
+          "x-api-key": process.env.API_KEY,
+        },
+        responseType: "arraybuffer",
+      }
+    );
 
-    await writeFile(htmlPath, alteredResumeHtml);
-    console.log("HTML content written to:", htmlPath);
-
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
-
-    page.on("console", (consoleObj) => console.log(consoleObj.text()));
-
-    await page.goto(`file://${htmlPath}`, { waitUntil: "networkidle0" });
-    const pdfBuffer = await page.pdf({ format: "A4" });
-    await browser.close();
-
-    await unlink(htmlPath);
-
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(response.data, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": "attachment; filename=modified.pdf",
