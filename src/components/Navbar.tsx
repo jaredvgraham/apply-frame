@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 const Navbar = () => {
   const pathname = usePathname();
-  const isLandingPage = pathname === "/landing";
+  const isLandingPage = pathname === "/landing" || pathname === "/";
   return (
     !isLandingPage && (
       <nav className=" bg-backgroundAlt text-text p-4 flex border border-border justify-between">
