@@ -7,12 +7,6 @@ import authMiddleware from "@/middleware/auth";
 import { connect } from "@/utils/mongoose";
 import { Buffer } from "buffer";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("upload resume handler hit");
   await connect();
