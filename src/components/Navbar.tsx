@@ -11,7 +11,7 @@ const Navbar = () => {
     !isLandingPage && (
       <nav className=" bg-backgroundAlt text-text p-4 flex border border-border justify-between">
         <div>
-          <Link href="/" className="mr-4">
+          <Link href="/dashboard" className="mr-4">
             Home
           </Link>
           <Link href="/upload-resume" className="mr-4">

@@ -33,7 +33,7 @@ const SignIn = () => {
         setAccessToken(accessToken);
         setIsAuthenticated(true);
 
-        router.push("/protected"); // Redirect to protected page after successful sign-in
+        router.push("/dashboard"); // Redirect to protected page after successful sign-in
       } catch (err: any) {
         setError(err.message);
       }
