@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import puppeteer from "puppeteer";
 import { uploadFileToFirebase } from "@/lib/uploadFileFirebase";
 import { uploadImageToFirebase } from "@/lib/uploadImageFirebase";
 import User from "@/models/userModel";
 import authMiddleware from "@/middleware/auth";
 import { connect } from "@/utils/mongoose";
 import { Buffer } from "buffer";
+import axios from "axios";
 
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("upload resume handler hit");
@@ -45,15 +45,20 @@ const handler = async (req: NextRequest, res: NextResponse) => {
     const pdfUrl = await uploadFileToFirebase(buffer, pdfFileName);
     console.log("PDF URL:", pdfUrl);
 
-    // Take a screenshot of the PDF using Puppeteer
-    const browser = await puppeteer.launch({ headless: true });
-    const page = await browser.newPage();
+    // Call the screenshot service
+    const screenshotResponse = await axios.post(
+      `${process.env.PUP_URL}/screenshot`, // Replace with your deployed server URL
+      { url: pdfUrl },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": process.env.API_KEY, // Your API key for the screenshot service
+        },
+        responseType: "arraybuffer", // to handle image response
+      }
+    );
 
-    page.on("console", (consoleObj) => console.log(consoleObj.text()));
-
-    await page.goto(pdfUrl, { waitUntil: "networkidle0" });
-    const screenshotBuffer = await page.screenshot({ fullPage: true });
-    await browser.close();
+    const screenshotBuffer = Buffer.from(screenshotResponse.data);
     console.log("Screenshot taken");
 
     // Upload screenshot to Firebase Storage
