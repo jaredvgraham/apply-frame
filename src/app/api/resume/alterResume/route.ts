@@ -8,7 +8,7 @@ import User from "@/models/userModel";
 import fs from "fs";
 
 import authMiddleware from "@/middleware/auth";
-
+//
 const handler = async (req: NextRequest, res: NextResponse) => {
   console.log("alter resume handler hit");
 
