@@ -91,22 +91,8 @@ const LandingPage = () => {
         <header className="bg-backgroundAlt shadow-custom">
           <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
             <h1 className="text-3xl font-bold text-primary">{text.appName}</h1>
-            <nav className="flex gap-4">
-              <button
-                onClick={handleSignin}
-                className="bg-primary text-white py-2 px-4 rounded hover:bg-primary-dark mr-4"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={handleSignup}
-                className="bg-secondary text-white py-2 px-4 rounded hover:bg-secondary-dark"
-              >
-                Sign Up
-              </button>
 
-              <ThemeToggle />
-            </nav>
+            <ThemeToggle />
           </div>
         </header>
 
