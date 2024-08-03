@@ -49,7 +49,13 @@ const UploadResume = () => {
 
   return (
     <div className="w-full lg:w-2/3 mx-auto p-6 bg-backgroundAlt text-text shadow-md mt-32 rounded-lg">
-      <h1 className="text-3xl font-semibold mb-6">Upload Resume</h1>
+      <h1 className="text-3xl font-semibold mb-6">
+        Upload Resume (note this endpoint might not work because im using
+        renders free plan and the cpu is not powerful enough to render the pdf
+        to be webscraped and take a screenshot it will work on a paid plan. The
+        problem is it will say it worked but the screenshot will be a blank
+        page)
+      </h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-lg font-medium mb-2">
