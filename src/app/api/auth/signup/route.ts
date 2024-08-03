@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 
 import User from "@/models/userModel";
 import { connect } from "@/utils/mongoose";
+import mongoose from "mongoose";
 
 export async function POST(req: NextRequest) {
   await connect();
@@ -22,10 +23,9 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      email,
       name,
+      email,
       password: hashedPassword,
-
       createdAt: new Date(),
     });
 
