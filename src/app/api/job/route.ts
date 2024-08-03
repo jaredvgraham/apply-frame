@@ -8,6 +8,7 @@ const handlerGet = async (req: NextRequest, res: NextResponse) => {
   await connect();
 
   const user = (req as any).user;
+  console.log("user", user);
 
   const userRecord = await User.findOne({ email: user.email });
 
@@ -25,12 +26,16 @@ const handlerGet = async (req: NextRequest, res: NextResponse) => {
 
 const handlerPost = async (req: NextRequest, res: NextResponse) => {
   await connect();
+  console.log("handlerPost hit");
 
   const user = (req as any).user;
+  console.log("user", user);
 
   const userRecord = await User.findOne({ email: user.email });
 
   if (!userRecord) {
+    console.log("User not found");
+
     return NextResponse.json(
       { success: false, message: "User not found" },
       { status: 404 }

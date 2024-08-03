@@ -1,34 +1,57 @@
 import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcrypt";
+
+import User from "@/models/userModel";
+import Session, { addSession } from "@/models/sessionModel";
 import {
   createAccessToken,
   createRefreshToken,
   UserTokenPayload,
 } from "@/utils/jwt";
-import bcrypt from "bcrypt";
 import { connect } from "@/utils/mongoose";
-import User from "@/models/userModel";
-import { addSession } from "@/models/sessionModel";
 
 export async function POST(req: NextRequest) {
   await connect();
 
-  const { email, password } = await req.json();
-  const user = await User.findOne({ email });
+  try {
+    const { email, password } = await req.json();
+    const user = await User.findOne({ email });
 
-  if (user && (await bcrypt.compare(password, user.password))) {
-    const userTokenPayload: UserTokenPayload = {
-      id: user.id,
+    if (!user) {
+      return NextResponse.json(
+        { success: false, message: "User not found" },
+        { status: 404 }
+      );
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return NextResponse.json(
+        { success: false, message: "Invalid credentials" },
+        { status: 401 }
+      );
+    }
+
+    const userPayload: UserTokenPayload = {
+      id: user._id.toString(),
       email: user.email,
     };
-    const accessToken = createAccessToken(userTokenPayload);
-    const refreshToken = createRefreshToken(userTokenPayload);
+    const accessToken = createAccessToken(userPayload);
+    const refreshToken = createRefreshToken(userPayload);
 
-    // Store the session in the database
-    await addSession(user.id, refreshToken);
+    const session = new Session({
+      userId: user._id.toString(),
+      refreshToken,
+      createdAt: new Date(),
+    });
+    await addSession(session);
 
-    const userId = user.id;
-
-    const response = NextResponse.json({ accessToken, userId });
+    const response = NextResponse.json({
+      success: true,
+      accessToken,
+      userPayload,
+    });
     response.cookies.set("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== "development",
@@ -38,10 +61,10 @@ export async function POST(req: NextRequest) {
     });
 
     return response;
-  } else {
+  } catch (error: any) {
     return NextResponse.json(
-      { message: "Invalid credentials" },
-      { status: 401 }
+      { success: false, error: error.message },
+      { status: error.status || 500 }
     );
   }
 }

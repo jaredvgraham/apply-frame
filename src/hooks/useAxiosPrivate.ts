@@ -1,10 +1,14 @@
-// src/hooks/useAxiosPrivate.ts
 import { useEffect } from "react";
-import { axiosPrivate } from "@/utils/axios";
+import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 
+const axiosPrivate = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  withCredentials: true,
+});
+
 const useAxiosPrivate = () => {
-  const { accessToken, setAccessToken, logout } = useAuth();
+  const { accessToken, setAccessToken } = useAuth();
 
   useEffect(() => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
@@ -21,11 +25,16 @@ const useAxiosPrivate = () => {
       (response) => response,
       async (error) => {
         const originalRequest = error.config;
-        if (error.response.status === 401 && !originalRequest._retry) {
+        if (
+          error.response &&
+          error.response.status === 401 &&
+          !originalRequest._retry &&
+          originalRequest.url !== "/auth/refresh-token"
+        ) {
           originalRequest._retry = true;
           try {
-            const response = await axiosPrivate.post(
-              "/auth/refresh-token",
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/refresh-token`,
               {},
               { withCredentials: true }
             );
@@ -36,7 +45,6 @@ const useAxiosPrivate = () => {
             ] = `Bearer ${newAccessToken}`;
             return axiosPrivate(originalRequest);
           } catch (refreshError) {
-            logout();
             return Promise.reject(refreshError);
           }
         }
@@ -48,7 +56,7 @@ const useAxiosPrivate = () => {
       axiosPrivate.interceptors.request.eject(requestIntercept);
       axiosPrivate.interceptors.response.eject(responseIntercept);
     };
-  }, [accessToken, setAccessToken, logout]);
+  }, [accessToken, setAccessToken]);
 
   return axiosPrivate;
 };

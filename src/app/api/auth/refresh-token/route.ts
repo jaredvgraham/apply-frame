@@ -1,50 +1,91 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
-  verifyRefreshToken,
   createAccessToken,
+  createRefreshToken,
+  verifyRefreshToken,
   UserTokenPayload,
 } from "@/utils/jwt";
 import cookie from "cookie";
+
+import { findSessionByToken, updateSessionToken } from "@/models/sessionModel";
 import { connect } from "@/utils/mongoose";
-import { findSessionByToken } from "@/models/sessionModel";
 
 export async function POST(req: NextRequest) {
   await connect();
 
-  const cookies = cookie.parse(req.headers.get("cookie") || "");
-  console.log("at refresh-token/route.ts, cookies:", cookies);
-
-  if (!cookies.refreshToken) {
-    console.log("No refresh token provided");
-    return NextResponse.json(
-      { message: "No refresh token provided" },
-      { status: 401 }
-    );
-  }
-
   try {
-    const decoded = verifyRefreshToken(
-      cookies.refreshToken
-    ) as UserTokenPayload;
-    console.log("Decoded refresh token:", decoded);
+    const cookies = cookie.parse(req.headers.get("cookie") || "");
+    if (!cookies.refreshToken) {
+      return NextResponse.json(
+        { success: false, message: "No refresh token" },
+        { status: 400 }
+      );
+    }
+
+    let decoded;
+    try {
+      decoded = verifyRefreshToken(cookies.refreshToken);
+    } catch (error) {
+      console.log("Invalid refresh token:", error);
+      return NextResponse.json(
+        { success: false, message: "Invalid refresh token" },
+        { status: 400 }
+      );
+    }
+
     const session = await findSessionByToken(cookies.refreshToken);
 
     if (!session) {
-      console.log("Invalid session");
-      return NextResponse.json({ message: "Invalid session" }, { status: 401 });
+      console.log("Session not found for token:", cookies.refreshToken);
+      return NextResponse.json(
+        { success: false, message: "Session not found" },
+        { status: 404 }
+      );
     }
 
-    const accessToken = createAccessToken({
+    const userPayload: UserTokenPayload = {
       id: decoded.id,
       email: decoded.email,
-    });
-    const userId = decoded.id;
-    return NextResponse.json({ accessToken, userId });
-  } catch (error) {
-    console.log("Invalid refresh token:", error);
+    };
+    const accessToken = createAccessToken(userPayload);
+    const newRefreshToken = createRefreshToken(userPayload);
+
+    const updatedSession = await updateSessionToken(
+      cookies.refreshToken,
+      newRefreshToken
+    );
+
+    if (!updatedSession) {
+      console.log(
+        "Failed to update session token. Session not found for:",
+        cookies.refreshToken
+      );
+      return NextResponse.json(
+        { success: false, message: "Failed to update session token" },
+        { status: 404 }
+      );
+    }
+
+    const response = NextResponse.json({ accessToken }, { status: 200 });
+
+    response.headers.set(
+      "Set-Cookie",
+      cookie.serialize("refreshToken", newRefreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        path: "/",
+      })
+    );
+
+    console.log("Session updated with new refresh token:", newRefreshToken);
+
+    return response;
+  } catch (error: any) {
+    console.log("Error processing token refresh:", error.message);
     return NextResponse.json(
-      { message: "Invalid refresh token" },
-      { status: 401 }
+      { success: false, message: error.message },
+      { status: 500 }
     );
   }
 }

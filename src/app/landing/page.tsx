@@ -196,7 +196,7 @@ const LandingPage = () => {
         <footer className="bg-background-alt shadow-custom mt-8">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 text-center">
             <p className="text-neutral">
-              &copy; 2024 MyApp. All rights reserved.
+              &copy; 2024 Apply Frame. All rights reserved.
             </p>
           </div>
         </footer>

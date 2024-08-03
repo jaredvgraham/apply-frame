@@ -2,7 +2,7 @@ import mongoose, { Document, Model, Schema } from "mongoose";
 
 // Define the IUser interface extending Document for TypeScript type-checking
 interface IUser extends Document {
-  id: number;
+  _id: mongoose.Types.ObjectId;
   email: string;
   name: string;
   password: string;
@@ -12,7 +12,6 @@ interface IUser extends Document {
 
 // Create the user schema with Mongoose, ensuring it matches the IUser interface
 const userSchema: Schema<IUser> = new Schema({
-  id: { type: Number, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   name: { type: String, required: true },
   password: { type: String, required: true },

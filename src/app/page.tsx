@@ -1,9 +1,9 @@
-import LandingPage from "./landing/page";
+import DashboardOverview from "./dashboard/page";
 
 export default function Page() {
   return (
     <>
-      <LandingPage />
+      <DashboardOverview />
     </>
   );
 }

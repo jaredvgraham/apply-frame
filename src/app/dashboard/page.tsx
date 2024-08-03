@@ -5,8 +5,10 @@ import { Job } from "@/types";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useAuth } from "@/context/AuthContext";
 
 const DashboardOverview = () => {
+  const { loading, isAuthenticated } = useAuth();
   const axiosPrivate = useAxiosPrivate();
   const [pastApplications, setPastApplications] = useState<Job[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -27,20 +29,14 @@ const DashboardOverview = () => {
     fetchPastApplications();
   }, [axiosPrivate]);
 
-  if (error) {
-    return (
-      <div className="p-6 bg-background text-text min-h-screen flex items-center justify-center">
-        {error}
-      </div>
-    );
-  }
-
   const formatDate = (dateString: string) => {
     return `${dateString.substring(5, 7)}/${dateString.substring(
       8,
       10
     )}/${dateString.substring(0, 4)}`;
   };
+
+  if (loading || !isAuthenticated) return <div>Loading...</div>;
 
   return (
     <div className="p-6 bg-background text-text min-h-screen">

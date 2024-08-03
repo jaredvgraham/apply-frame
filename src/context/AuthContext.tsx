@@ -16,6 +16,7 @@ interface AuthContextProps {
   isAuthenticated: boolean;
   accessToken: string | null;
   userId: string | null;
+  loading: boolean;
   setAccessToken: (accessToken: string) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
@@ -68,7 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
       const { accessToken } = response.data;
       setAccessToken(accessToken);
-      setUserId(response.data.userId);
+      setUserId(response.data.userTokenPayload.id);
       setIsAuthenticated(true);
       router.push("/protected");
     } catch (error) {
@@ -90,13 +91,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const refreshSession = async () => {
     try {
-      const response = await axiosPublic.post("/auth/session", {
+      const response = await axiosPublic.get("/auth/session", {
         withCredentials: true,
       });
       const { accessToken } = response.data;
       if (accessToken) {
         setAccessToken(accessToken);
-        setUserId(response.data.userId);
+        setUserId(response.data.user.id);
+
         setIsAuthenticated(true);
       }
     } catch (error) {
@@ -109,6 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       value={{
         isAuthenticated,
         accessToken,
+        loading,
         userId,
         setAccessToken,
         setIsAuthenticated,
