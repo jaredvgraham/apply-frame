@@ -75,6 +75,10 @@ export async function POST(req: NextRequest) {
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
         path: "/",
+        domain:
+          process.env.NODE_ENV === "production"
+            ? "apply-frame.vercel.app"
+            : undefined,
       })
     );
 

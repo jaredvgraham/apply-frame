@@ -58,6 +58,10 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 1 week
       sameSite: "strict",
       path: "/",
+      domain:
+        process.env.NODE_ENV === "production"
+          ? "apply-frame.vercel.app"
+          : undefined,
     });
 
     return response;
